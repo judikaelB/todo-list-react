@@ -5,24 +5,7 @@ import React, {Component} from "react";
 class CreateTodo extends Component {
     state = {
         todoname: "",
-        editMode: false,
     };
-    componentDidMount() {
-        console.log('bonjour')
-    }
-    static getDerivedStateFromProps(nextProps, previousState){
-        if(!previousState.hasBeenUpdated && nextProps.editingTodo !== null){
-            return {
-                todoname: nextProps.editingTodo.title,
-                editMode: true
-            }
-        }
-        return {editMode: false};
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log('le composant a été mise à jour');
-    }
 
     onChangeHandler = (e) => {
 

@@ -1,14 +1,14 @@
 import React, {Component} from "react";
 import TodoElement from "./components/TodoElement";
-import CreateTodo from "./components/CreateTodo"
-
 
 class App extends Component{
     state = {
         todoList: [
             {id: 1, title: "apprendre javascript"}
         ],
-        editingTodo: null,
+        index: -1,
+        editingMode: false,
+        todoname: "",
     };
     ondeleteHandler = id => {
         let todoList = [...this.state.todoList];
@@ -33,16 +33,35 @@ class App extends Component{
     };
     oneditHandler = todo => {
         let todoList = [...this.state.todoList];
-        //let index = todoList.findIndex(td => todo.id === td.id);
-        this.setState({editingTodo:todo});
+        let index = todoList.findIndex(td => todo.id === td.id);
+        console.log(todo);
+        this.setState({editingMode:true,todoname: todo.title, index: index});
 
     };
 
-    onclickHandler = todoname => {
+    onclickHandler = e => {
+        if (this.state.editingMode){
+            let todoList = [...this.state.todoList];
+            todoList[this.state.index].title = this.state.todoname;
+            this.setState({
+                editingMode: false,
+                index: -1,
+                todoname: "",
+                todoList: todoList,
+            })
+        } else {
+            this.setState({
+                todoList: [...this.state.todoList,{title:this.state.todoname,id:this.state.todoList.length+1}],
+            });
+        }
+        this.setState({todoname:""});
+    };
+
+    onChangeHandler = (e) => {
+
         this.setState({
-            todoList: [...this.state.todoList,{title:todoname,id:this.state.todoList.length+1}]
-        });
-        console.log(this.state.todoList);
+            todoname: e.target.value
+        })
     };
     render() {
         return (
@@ -58,7 +77,16 @@ class App extends Component{
                               onedit={this.oneditHandler}/>
                       })
                 }
-                <CreateTodo oncreate={this.onclickHandler} editingTodo={this.state.editingTodo} />
+                <div className="container">
+                    <input value={this.state.todoname} onChange={this.onChangeHandler}
+
+                           className="form-control mt-2"
+                           placeholder="add to list" type="text"/>
+                    <a href="#" className="btn btn-success" onClick={this.onclickHandler }>Submit</a>
+                    <p>
+                        {this.state.todoname}
+                    </p>
+                </div>
             </div>
         )
     }
